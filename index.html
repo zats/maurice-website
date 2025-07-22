@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maurice - Your Conversational IT Assistant for Mac</title>
+    <meta name="description" content="Maurice is your personal IT assistant that can troubleshoot your Mac, provide tech support for your parents, and even serve as corporate IT support with company-specific knowledge.">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Times New Roman", Times, serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #e0e0e0;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Layout */
+        .centerwrap {
+            box-sizing: content-box;
+            margin-inline: auto;
+            max-inline-size: 800px;
+            padding: 0 1rem;
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .stack > * {
+            margin-block: 0;
+        }
+
+        .stack > * + * {
+            margin-block-start: 1.5rem;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            margin-bottom: 0;
+            text-wrap: balance;
+            font-weight: 900;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-top: 0;
+            line-height: 1.0;
+            text-align: center;
+            font-style: italic;
+            font-weight: 300;
+            letter-spacing: -2px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            font-style: normal;
+            font-weight: 400;
+            color: #d0d0d0;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        p {
+            font-size: 1.25rem;
+            line-height: 1.5;
+            margin: 0 0 1.5rem 0;
+            padding: 0;
+        }
+
+        /* Navigation */
+        nav {
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #000;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin: 2rem 0 4rem 0;
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            font-style: italic;
+            color: #999;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            margin: 2rem 0;
+        }
+
+        /* Feature List */
+        .feature-list {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+
+        .feature-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            margin-top: 0.25rem;
+            color: #b0b0b0;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        .feature-content p {
+            font-size: 1.125rem;
+            margin-bottom: 0;
+        }
+
+        /* Form Styles */
+        .signup-form {
+            max-width: 500px;
+            margin: 0 auto 0;
+            padding: 1rem 0;
+            border: none;
+            background: transparent;
+            text-align: center;
+        }
+
+        .signup-form h3 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-style: normal;
+            color: #e0e0e0;
+        }
+
+        .signup-form input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #555;
+            font-size: 1.1rem;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            box-sizing: border-box;
+            font-family: "Times New Roman", Times, serif;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .signup-form input:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        .signup-form input::placeholder {
+            color: #888;
+            font-style: italic;
+        }
+
+        .signup-form button {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            font-size: 0.9rem;
+            font-weight: 400;
+            cursor: pointer;
+            font-family: "Times New Roman", Times, serif;
+            font-style: normal;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .signup-form button:hover {
+            background: #3a3a3a;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid #444;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .centerwrap {
+                padding: 0 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .signup-form {
+                padding: 2rem;
+                margin: 2rem auto 0;
+            }
+            
+            .carousel-container {
+                width: 308px;
+                height: 390px;
+            }
+            
+            .carousel-controls {
+                width: calc(100% + 80px);
+                left: -40px;
+            }
+            
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+            }
+            
+        }
+        
+        @media (max-width: 380px) {
+            .carousel-container {
+                width: 257px;
+                height: 325px;
+            }
+            
+            .carousel-controls {
+                width: calc(100% + 60px);
+                left: -30px;
+            }
+        }
+
+        /* Video Carousel */
+        #scenarios {
+            padding-top: 0;
+            margin-top: 0;
+        }
+        
+        .video-carousel {
+            margin: 0 0 3rem 0;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 514px;
+            height: 650px;
+            margin: 0 auto;
+            background: transparent;
+            overflow: visible !important;
+        }
+
+        .carousel-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            left: 0;
+            display: flex !important;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 100;
+            padding: 0 10px;
+        }
+
+        .carousel-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.4);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            pointer-events: all;
+            opacity: 0.7;
+            font-size: 48px;
+            font-weight: 100;
+            line-height: 1;
+            padding: 0;
+            z-index: 1000;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .carousel-btn:hover {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.9);
+            opacity: 1;
+        }
+        
+        .chevron {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            position: relative;
+        }
+        
+        .chevron::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-style: solid;
+            border-width: 1px 1px 0 0;
+            transform: rotate(45deg);
+        }
+        
+        .chevron-left::before {
+            transform: rotate(-135deg);
+            right: 25%;
+        }
+        
+        .chevron-right::before {
+            transform: rotate(45deg);
+            left: 25%;
+        }
+        
+        .carousel-btn .chevron::before {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .carousel-btn:hover .chevron::before {
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .carousel-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: background 0.3s ease;
+            padding: 0;
+        }
+
+        .carousel-dot.active {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .carousel-dot:hover {
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .video-description {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .video-description h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-description p {
+            font-size: 1.125rem;
+            color: #b0b0b0;
+        }
+
+        /* Light Mode */
+        @media (prefers-color-scheme: light) {
+            body {
+                color: #333;
+                background-color: #ffffff;
+            }
+            
+            .nav-links a {
+                color: #333;
+            }
+            
+            h2 {
+                color: #444;
+            }
+            
+            .hero-subtitle {
+                color: #666;
+            }
+            
+            .feature-icon {
+                color: #313544;
+            }
+            
+            .signup-form {
+                background: transparent;
+                border: none;
+            }
+            
+            .signup-form h3 {
+                color: #333;
+            }
+            
+            .signup-form input {
+                background: #ffffff;
+                color: #333;
+                border: 2px solid #ccc;
+            }
+            
+            .signup-form input:focus {
+                border-color: #666;
+            }
+            
+            .signup-form input::placeholder {
+                color: #888;
+            }
+            
+            .signup-form button {
+                background: #f0f0f0;
+                color: #333;
+                border: 1px solid #ccc;
+            }
+            
+            .signup-form button:hover {
+                background: #e0e0e0;
+            }
+            
+            footer {
+                border-top: 1px solid #ddd;
+            }
+            
+            footer p {
+                color: #666;
+            }
+            
+            
+            .carousel-btn {
+                background: transparent;
+                color: rgba(0, 0, 0, 0.4);
+                box-shadow: none;
+                border: none;
+                opacity: 0.7;
+                text-shadow: 0 1px 3px rgba(255, 255, 255, 0.5);
+            }
+            
+            .carousel-btn:hover {
+                background: transparent;
+                color: rgba(0, 0, 0, 0.8);
+                opacity: 1;
+            }
+            
+            .carousel-btn .chevron::before {
+                border-color: rgba(0, 0, 0, 0.4);
+            }
+            
+            .carousel-btn:hover .chevron::before {
+                border-color: rgba(0, 0, 0, 0.8);
+            }
+            
+            .carousel-dot {
+                background: rgba(0, 0, 0, 0.3);
+            }
+            
+            .carousel-dot.active {
+                background: rgba(0, 0, 0, 0.8);
+            }
+            
+            .carousel-dot:hover {
+                background: rgba(0, 0, 0, 0.5);
+            }
+            
+            .video-description p {
+                color: #666;
+            }
+        }
+    </style>
+</head>
+<body class="centerwrap">
+    <nav>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#scenarios">See it in Action</a></li>
+            <li><a href="#how-it-works">How it Works</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+    </nav>
+
+    <main class="stack">
+        <section class="hero">
+            <h1>Maurice</h1>
+            <p class="hero-subtitle">The IT assistant that speaks your language—from everyday questions to enterprise solutions.</p>
+            <picture>
+                <source srcset="assets/mac@dark.png" media="(prefers-color-scheme: dark)">
+                <img src="assets/mac@light.png" alt="Maurice - Coming Soon for macOS" class="hero-image">
+            </picture>
+        </section>
+
+        <section id="features">
+            <h2>One Assistant, Three Powerful Modes</h2>
+            <p>Maurice adapts to you. Whether you're a parent who just wants things to work, a developer who needs transparency, or an enterprise user with specific requirements—Maurice delivers the right experience.</p>
+            
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i data-lucide="wrench" class="feature-icon"></i>
+                    <div class="feature-content">
+                        <h3>Simple Mode for Everyone</h3>
+                        <p>Ask questions in plain English and get straightforward answers. No technical knowledge required—Maurice handles the complexity behind the scenes so you don't have to.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i data-lucide="users" class="feature-icon"></i>
+                    <div class="feature-content">
+                        <h3>Transparent Mode for Developers</h3>
+                        <p>See exactly what Maurice is doing. Full audit trails, confirmation prompts, and detailed explanations. Perfect for developers and power users who want complete control.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <i data-lucide="building" class="feature-icon"></i>
+                    <div class="feature-content">
+                        <h3>Enterprise Knowledge Integration</h3>
+                        <p>Connect Maurice to your company's proprietary documentation and knowledge bases. Access internal resources, beta documentation, and custom solutions that aren't available on public search engines.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="scenarios">
+            <h2>Maurice in Action</h2>
+            <p>See how Maurice adapts to different users and scenarios—from everyday questions to advanced troubleshooting.</p>
+            <div class="video-carousel">
+                <div class="carousel-container">
+                    <video class="carousel-video" autoplay muted playsinline>
+                        <source src="assets/video/is my internet fast enough.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn carousel-prev" aria-label="Previous video">
+                            <span class="chevron chevron-left"></span>
+                        </button>
+                        <button class="carousel-btn carousel-next" aria-label="Next video">
+                            <span class="chevron chevron-right"></span>
+                        </button>
+                    </div>
+                    <div class="carousel-dots">
+                        <button class="carousel-dot active" data-index="0" aria-label="Go to video 1"></button>
+                        <button class="carousel-dot" data-index="1" aria-label="Go to video 2"></button>
+                        <button class="carousel-dot" data-index="2" aria-label="Go to video 3"></button>
+                    </div>
+                </div>
+                <div class="video-description">
+                    <h3>Perfect for Everyone</h3>
+                    <p>Maurice speaks your language. No tech jargon, just simple answers to everyday questions like "Is my internet fast enough to watch a film?"</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2>How Maurice Works</h2>
+            <p>Maurice combines the power of advanced AI with a deep understanding of macOS to provide instant, accurate IT support.</p>
+            
+            <h3>Natural Conversations</h3>
+            <p>Just describe your problem in plain English. Maurice will understand context and ask clarifying questions when needed, just like a human IT specialist would.</p>
+            
+            <h3>Beyond Public Knowledge</h3>
+            <p>While other assistants rely on general web searches, Maurice can access your organization's internal documentation, beta release notes, and proprietary knowledge bases. Find solutions that Google can't.</p>
+            
+            <h3>Continuous Learning</h3>
+            <p>Every interaction will make Maurice smarter. It will learn from successful resolutions and adapt to your specific environment and preferences.</p>
+        </section>
+
+        <section class="cta" id="download">
+            <h2>Simplify IT Support for Your Mac</h2>
+            <p>Sign up for early access and get ready to experience Maurice.</p>
+            <form action="https://submit-form.com/dKOQCzG3O" class="signup-form">
+                <input type="text" id="name" name="name" placeholder="Your name" required />
+                <input type="email" id="email" name="email" placeholder="Your email address" required />
+                <button type="submit">Join the Waitlist</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Maurice. Built with care in New York.</p>
+        <p>Made by developers who understand the frustration of tech issues.</p>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Re-initialize icons after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+        
+        // Video Carousel
+        const videos = [
+            {
+                src: 'assets/video/is my internet fast enough.mp4',
+                title: 'Perfect for Everyone',
+                description: 'Maurice speaks your language. No tech jargon, just simple answers to everyday questions like "Is my internet fast enough to watch a film?"'
+            },
+            {
+                src: 'assets/video/localhost.mp4',
+                title: 'Developer-Friendly Power',
+                description: 'For the tech-savvy, Maurice shows its work. Full transparency with confirmations before actions—check if localhost is running with complete control.'
+            },
+            {
+                src: 'assets/video/knowledge lookup.mp4',
+                title: 'Enterprise-Ready Intelligence',
+                description: 'Access proprietary knowledge instantly. Maurice understands context-specific issues, like finding solutions in macOS beta release notes that aren\'t on Google.'
+            }
+        ];
+        
+        let currentVideoIndex = 0;
+        const videoElement = document.querySelector('.carousel-video');
+        const videoSource = videoElement.querySelector('source');
+        const titleElement = document.querySelector('.video-description h3');
+        const descriptionElement = document.querySelector('.video-description p');
+        const dots = document.querySelectorAll('.carousel-dot');
+        const prevBtn = document.querySelector('.carousel-prev');
+        const nextBtn = document.querySelector('.carousel-next');
+        
+        function updateVideo(index) {
+            currentVideoIndex = index;
+            
+            // Update video
+            videoSource.src = videos[index].src;
+            videoElement.load();
+            videoElement.play();
+            
+            // Update text
+            titleElement.textContent = videos[index].title;
+            descriptionElement.textContent = videos[index].description;
+            
+            // Update dots
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+        
+        function nextVideo() {
+            const nextIndex = (currentVideoIndex + 1) % videos.length;
+            updateVideo(nextIndex);
+        }
+        
+        function prevVideo() {
+            const prevIndex = (currentVideoIndex - 1 + videos.length) % videos.length;
+            updateVideo(prevIndex);
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', nextVideo);
+        prevBtn.addEventListener('click', prevVideo);
+        
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => updateVideo(index));
+        });
+        
+        // Auto-advance to next video when current one ends
+        videoElement.addEventListener('ended', () => {
+            nextVideo();
+        });
+    </script>
+</body>
+</html>
